@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chirundu Bus Terminal</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #fdbb2d;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .logo-text span {
+            color: #fdbb2d;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            padding: 8px 15px;
+            border-radius: 4px;
+        }
+
+        nav ul li a:hover {
+            color: #fdbb2d;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3') no-repeat center center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin-bottom: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            color: white;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .btn {
+            display: inline-block;
+            background: #fdbb2d;
+            color: #333;
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            background: #ffa000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        /* Departures Board */
+        .section-title {
+            text-align: center;
+            margin: 40px 0 30px;
+            font-size: 2.2rem;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        .departures-board {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+        }
+
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            background: #1a2a6c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+        }
+
+        .departure-list {
+            list-style: none;
+        }
+        .departure-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+
+        .departure-item:last-child {
+            border-bottom: none;
+        }
+
+        .departure-item:hover {
+            background: rgba(253, 187, 45, 0.1);
+        }
+
+        .time {
+            font-weight: bold;
+            color: #1a2a6c;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status.on-time {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.delayed {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status.departed {
+            background: #f5f5f5;
+            color: #9e9e9e;
+        }
+
+        /* Services Section */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-card i {
+            font-size: 3rem;
+            color: #1a2a6c;
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #1a2a6c;
+        }
+
+
+        /* Booking Section */
+        .booking {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .booking-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1a2a6c;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #1a2a6c;
+            box-shadow: 0 0 0 2px rgba(26, 42, 108, 0.2);
+        }
+
+        .form-submit {
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #fdbb2d;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #fdbb2d;
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: #fdbb2d;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: #fdbb2d;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+           
+            nav ul {
+                margin-top: 20px;
+            }
+           
+            nav ul li {
+                margin: 0 10px;
+            }
+           
+            .hero {
+                height: 400px;
+            }
+           
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+           
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+           
+            nav ul li {
+                margin: 5px 0;
+            }
+           
+            .hero {
+                height: 350px;
+            }
+           
+            .hero-content {
+                padding: 20px;
+            }
+           
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+           
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+    </style>
+</head>
+</body>
+
+    <!-- Header with Navigation -->
+    <header>
+        <div class="header-container container">
+            <div class="logo">
+                <i class="fas fa-bus"></i>
+                <div class="logo-text">CHIRUNDU <span>BUS </span> TERMINAL</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#departures"><i class="fas fa-clock"></i> Departures</a></li>
+                    <li><a href="#booking"><i class="fas fa-ticket-alt"></i> Book Tickets</a></li>
+                   <li><a href="#services"><i class="fas fa-concierge-bell"></i> Services</a></li>
+                    <li><a href="#contact"><i class="fas fa-phone-alt"></i> Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome To Chirundu Boarder Bus Terminal</h1>
+                <p>Your gateway to seamless travel across the region. Find schedules, book tickets, and plan your journey with ease.</p>
+                <a href="#booking" class="btn">Book Your Ticket Now</a>
+            </div>
+        </section>
+
+        <!--Departure-list-->
+        <h2 class="section-title" id="departures">Departures Board</h2>
+        <section class="departures-board">
+            <div class="board-header">
+                <div>Time</div>
+                <div>Destination</div>
+                <div>Platform</div>
+                <div>Status</div>
+            </div>
+            <ul class="departure-list">
+               <li class="departure-item">
+                    <div class="time">08:30 AM</div>
+                    <div class="destination">Capital City Lusaka</div>
+                    <div class="platform">platform 3</div>
+                    <div class="status on-time">On Time</div>
+               </li>
+                <li class="departure-item">
+                    <div class="time">09:15 AM</div>
+                    <div class="destination">Siavonga</div>
+                    <div class="platform">Platform 1</div>
+                    <div class="status on-time">On Time</div>
+                </li>
+                <li class="departure-item">
+                    <div class="time">09:45 AM</div>
+                    <div class="destination">Livingstone</div>
+                    <div class="platform">Platform 2</div>
+                    <div class="status delayed">Delayed 15 min</div>
+                </li>
+                <li class="departure-item">
+                    <div class="time">10:20 AM</div>
+                    <div class="destination">Central kabwe</div>
+                    <div class="platform">Platform 4</div>
+                    <div class="status on-time">On Time</div>
+                </li>
+                <li class="departure-item">
+                    <div class="time">11:05 AM</div>
+                    <div class="destination">Copperbelt & Ndola</div>
+                    <div class="platform">Platform 5</div>
+                    <div class="status departed">Departed</div>
+                </li>
+                <li class="departure-item">
+                    <div class="time">11:50 AM</div>
+                    <div class="destination">Safari Lower Zambezi </div>
+                    <div class="platform">Platform 2</div>
+                    <div class="status on-time">On Time</div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Services Section -->
+        <h2 class="section-title" id="services">Terminal Services</h2>
+        <section class="services">
+            <div class="service-card">
+                <i class="fas fa-wifi"></i>
+                <h3>Free Wi-Fi</h3>
+                <p>Stay connected with high-speed internet access throughout the terminal.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-utensils"></i>
+                <h3>Food Court</h3>
+                <p>Enjoy a variety of dining options from quick snacks to full meals.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-suitcase-rolling"></i>
+                <h3>Luggage Storage</h3>
+                <p>Secure storage for your bags with 24/7 monitoring.</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-wheelchair"></i>
+                <h3>Accessibility</h3>
+                <p>Full accessibility features for passengers with special needs.</p>
+            </div>
+        </section>
+
+        <!-- Booking Section -->
+        <h2 class="section-title" id="booking">Book Your Journey</h2>
+        <section class="booking">
+            <form class="booking-form">
+                <div class="form-group">
+                    <label for="from">From</label>
+                    <select id="from">
+                        <option value="">Select departure city</option>
+                        <option value="city-central">City Central Terminal</option>
+                        <option value="north-station">North Station</option>
+                        <option value="south-plaza">South Plaza</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="to">To</label>
+                    <select id="to">
+                        <option value="">Select destination city</option>
+                        <option value="Lusaka">Capital City Lusaka</option>
+                        <option value="kariba">Siavonga</option>
+                        <option value="victoria">Livingstone</option>
+                        <option value="Central">Central Kabwe</option>
+                        <option value="Cb">Copperbelt & Ndola</option>
+                        <option value="Zambezi">Safari Lower Zambezi</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="depart-date">Departure Date</label>
+                    <input type="date" id="depart-date">
+                </div>
+                <div class="form-group">
+                    <label for="return-date">Return Date (Optional)</label>
+                    <input type="date" id="return-date">
+                </div>
+                <div class="form-group">
+                    <label for="passengers">Passengers</label>
+                    <select id="passengers">
+                        <option value="1">1 Passenger</option>
+                        <option value="2">2 Passengers</option>
+                        <option value="3">3 Passengers</option>
+                        <option value="4">4 Passengers</option>
+                        <option value="5">5 Passengers</option>
+                    </select>
+                </div>
+                <div class="form-group form-submit">
+                    <button type="submit" class="btn">Search Buses & Book</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="con
+
+</html>
