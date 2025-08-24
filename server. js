@@ -1,0 +1,33 @@
+// Import required modules
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Sample in-memory data for departures (normally you'd use a database)
+let departures = [
+  { time: "08:30 AM", destination: "Capital City Lusaka", platform: "Platform 3", status: "On Time" },
+  { time: "09:15 AM", destination: "Siavonga", platform: "Platform 1", status: "On Time" },
+  { time: "09:45 AM", destination: "Livingstone", platform: "Platform 2", status: "Delayed 15 min" },
+];
+
+// API endpoint to get all departures
+app.get('/api/departures', (req, res) => {
+  console.log("Departures requested");
+  res.json(departures); // Send departures data as JSON
+});
+
+// API endpoint to book a ticket (simplified)
+app.post('/api/book', (req, res) => {
+  console.log("Booking request received:", req.body);
+  const { from, to, departDate, passengers } = req.body;
+  // Normally you'd handle booking logic here (like saving to DB)
+  res.json({ message: "Booking request received", bookingDetails: req.body });
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
